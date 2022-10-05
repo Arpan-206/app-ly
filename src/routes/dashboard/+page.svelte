@@ -78,7 +78,7 @@
 	<thead>
 		<tr>
 			<th scope="col">Long URL</th>
-            
+            <th scope="col">Short URL</th>
 			<th scope="col">Active</th>
 			<th scope="col">Alias</th>
 			<th scope="col">Delete?</th>
@@ -88,6 +88,7 @@
 		<tbody>
 			<tr>
 				<td><a href={doc.long_url}>{truncate(doc.long_url, 20)}</a></td>
+                <td><a href={window.location.href.split("//")[0] + "//" + window.location.href.split("/")[2] + "/l/"  + doc.alias}>{window.location.href.split("//")[0] + "//" + window.location.href.split("/")[2] + "/l/"  + doc.alias}</a></td>
 				<td
 					><input
 						type="checkbox"
