@@ -1,0 +1,122 @@
+<script>
+	import { onMount } from 'svelte';
+	import { db, account } from '../../scripts/appwrite-client.js';
+	import { PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION } from '$env/static/public';
+	import { Query } from 'appwrite';
+	let data = null;
+	let error = null;
+	let docs = [];
+	function truncate(str, n) {
+		return str.length > n ? str.slice(0, n - 1) + '...' : str;
+	}
+	onMount(async () => {
+		const meh = await account.get();
+		if (!meh) {
+			alert('You are not logged in. Please login to continue.');
+			window.location.href = '/login';
+		}
+
+		data = await db.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION).catch((err) => {
+			error = err;
+		});
+		for (let i = 0; i < data.documents.length; i++) {
+			if (data.documents[i].userID === meh.$id) {
+				docs.push(data.documents[i]);
+				docs = docs;
+			}
+		}
+	});
+
+	async function toggleActive(e) {
+		let id = e.target.id;
+		id = id.split('-')[1];
+		let active = e.target.checked;
+		let mej = await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
+			active: active
+		});
+	}
+
+	async function verifyAlias(e) {
+		let id = e.target.id;
+		id = id.split('-')[1];
+
+		let checkAlias = await db
+			.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, [
+				Query.equal('alias', [e.target.value])
+			])
+			.catch((err) => {});
+		if (checkAlias.total > 0) {
+			e.target.ariaInvalid = true;
+			return;
+		} else {
+			e.target.ariaInvalid = false;
+		}
+		console.log(checkAlias);
+	}
+
+	async function changeAlias(e) {
+		let id = e.target.id;
+		id = id.split('-')[2];
+		let alias = document.getElementById('alias-' + id).value;
+		let mej = await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
+			alias: alias
+		});
+		document.location.reload();
+	}
+
+	async function deleteLink(e) {
+		let id = e.target.id;
+		id = id.split('-')[1];
+		console.log(id);
+		let mej = await db.deleteDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id);
+		document.location.reload();
+	}
+</script>
+
+<h1>My Dashboard</h1>
+<table role="grid">
+	<thead>
+		<tr>
+			<th scope="col">Long URL</th>
+            
+			<th scope="col">Active</th>
+			<th scope="col">Alias</th>
+			<th scope="col">Delete?</th>
+		</tr>
+	</thead>
+	{#each docs as doc}
+		<tbody>
+			<tr>
+				<td><a href={doc.long_url}>{truncate(doc.long_url, 20)}</a></td>
+				<td
+					><input
+						type="checkbox"
+						id={'active-' + doc.$id}
+						name={'active-' + doc.$id}
+						checked={doc.active}
+						on:change={toggleActive}
+					/></td
+				>
+				<td
+					><div class="grid">
+						<input value={doc.alias} id={'alias-' + doc.$id} on:change={verifyAlias} /><button
+							id={'btn-alias-' + doc.$id}
+							class="outline"
+							on:click={changeAlias}>Edit!</button
+						>
+					</div></td
+				>
+				<td
+					><button
+						class="outline"
+                        id={'delete-' + doc.$id}
+						style="border-color: #e53935; color: #e53935;"
+						on:click={deleteLink}>Delete</button
+					></td
+				>
+			</tr>
+		</tbody>
+    {:else}
+    <p>No links yet, create one over <a href="/">here</a>.</p>
+	{/each}
+</table>
