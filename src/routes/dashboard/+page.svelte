@@ -75,52 +75,79 @@
 
 <h1>My Dashboard</h1>
 <div class="container">
-<h2>My Links</h2>
-<table role="grid">
-	<thead>
-		<tr>
-			<th scope="col">Long URL</th>
-            <th scope="col">Short URL</th>
-			<th scope="col">Active</th>
-			<th scope="col">Alias</th>
-			<th scope="col">Delete?</th>
-		</tr>
-	</thead>
-	{#each docs as doc}
-		<tbody>
+	<h2>My Links</h2>
+	<table role="grid">
+		<thead>
 			<tr>
-				<td><a href={doc.long_url}>{truncate(doc.long_url, 20)}</a></td>
-                <td><a href={window.location.href.split("//")[0] + "//" + window.location.href.split("/")[2] + "/l/"  + doc.alias}>{window.location.href.split("//")[0] + "//" + window.location.href.split("/")[2] + "/l/"  + doc.alias}</a></td>
-				<td
-					><input
-						type="checkbox"
-						id={'active-' + doc.$id}
-						name={'active-' + doc.$id}
-						checked={doc.active}
-						on:change={toggleActive}
-					/></td
-				>
-				<td
-					><div class="grid">
-						<input value={doc.alias} id={'alias-' + doc.$id} on:change={verifyAlias} /><button
-							id={'btn-alias-' + doc.$id}
-							class="outline"
-							on:click={changeAlias}>Edit!</button
-						>
-					</div></td
-				>
-				<td
-					><button
-						class="outline"
-                        id={'delete-' + doc.$id}
-						style="border-color: #e53935; color: #e53935;"
-						on:click={deleteLink}>Delete</button
-					></td
-				>
+				<th scope="col">Long URL</th>
+				<th scope="col">Short URL</th>
+				<th scope="col">Active</th>
+				<th scope="col">Alias</th>
+				<th scope="col">Delete?</th>
 			</tr>
-		</tbody>
-    {:else}
-    <p>No links yet, create one over <a href="/">here</a>.</p>
-	{/each}
-</table>
+		</thead>
+		{#each docs as doc}
+			<tbody>
+				<tr>
+					<td><a href={doc.long_url}>{truncate(doc.long_url, 20)}</a></td>
+					<td
+						><a
+							href={window.location.href.split('//')[0] +
+								'//' +
+								window.location.href.split('/')[2] +
+								'/l/' +
+								doc.alias}
+							>{window.location.href.split('//')[0] +
+								'//' +
+								window.location.href.split('/')[2] +
+								'/l/' +
+								doc.alias}</a
+						></td
+					>
+					<td
+						><input
+							type="checkbox"
+							id={'active-' + doc.$id}
+							name={'active-' + doc.$id}
+							checked={doc.active}
+							on:change={toggleActive}
+						/></td
+					>
+					<td
+						><div class="grid">
+							<input value={doc.alias} id={'alias-' + doc.$id} on:change={verifyAlias} /><button
+								id={'btn-alias-' + doc.$id}
+								class="outline"
+								on:click={changeAlias}>Edit!</button
+							>
+						</div></td
+					>
+					<td
+						><button
+							class="outline"
+							id={'delete-' + doc.$id}
+							style="border-color: #e53935; color: #e53935;"
+							on:click={deleteLink}>Delete</button
+						></td
+					>
+				</tr>
+			</tbody>
+		{:else}
+			<p>No links yet, create one over <a href="/">here</a>.</p>
+		{/each}
+	</table>
+</div>
+<div>
+    <h2>QR Codes for the links</h2>
+    {#each docs as doc}
+	<div>
+        <h3>{doc.alias}</h3>
+		<img
+			src={`https://api.qrserver.com/v1/create-qr-code/?data=${window.location.href.split('/d')[0] + 'n/' + doc.alias}&color=3949ab`}
+			alt="QR Code"
+			style="width: 200px; height: 100%;"
+		/>
+	</div>
+    <br />
+    {/each}
 </div>
