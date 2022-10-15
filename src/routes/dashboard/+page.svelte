@@ -74,6 +74,8 @@
 </script>
 
 <h1>My Dashboard</h1>
+<div class="container">
+<h2>My Links</h2>
 <table role="grid">
 	<thead>
 		<tr>
@@ -121,3 +123,4 @@
     <p>No links yet, create one over <a href="/">here</a>.</p>
 	{/each}
 </table>
+</div>
