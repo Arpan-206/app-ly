@@ -4,7 +4,6 @@
 	import { PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION } from '$env/static/public';
 	import { Query } from 'appwrite';
 	let data = null;
-	let error = null;
 	let docs = [];
 	function truncate(str, n) {
 		return str.length > n ? str.slice(0, n - 1) + '...' : str;
@@ -16,9 +15,7 @@
 			window.location.href = '/login';
 		}
 
-		data = await db.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION).catch((err) => {
-			error = err;
-		});
+		data = await db.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION).catch();
 		for (let i = 0; i < data.documents.length; i++) {
 			if (data.documents[i].userID === meh.$id) {
 				docs.push(data.documents[i]);
@@ -31,20 +28,20 @@
 		let id = e.target.id;
 		id = id.split('-')[1];
 		let active = e.target.checked;
-		let mej = await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
+		await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
 			active: active
 		});
 	}
 
 	async function verifyAlias(e) {
-		let id = e.target.id;
-		id = id.split('-')[1];
+		// let id = e.target.id;
+		// id = id.split('-')[1];
 
 		let checkAlias = await db
 			.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, [
 				Query.equal('alias', [e.target.value])
 			])
-			.catch((err) => {});
+			.catch(() => {});
 		if (checkAlias.total > 0) {
 			e.target.ariaInvalid = true;
 			return;
@@ -58,7 +55,7 @@
 		let id = e.target.id;
 		id = id.split('-')[2];
 		let alias = document.getElementById('alias-' + id).value;
-		let mej = await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
+		await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id, {
 			alias: alias
 		});
 		document.location.reload();
@@ -68,7 +65,7 @@
 		let id = e.target.id;
 		id = id.split('-')[1];
 		console.log(id);
-		let mej = await db.deleteDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id);
+		await db.deleteDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, id);
 		document.location.reload();
 	}
 </script>
@@ -81,7 +78,7 @@
 			<tr>
 				<th scope="col">Long URL</th>
 				<th scope="col">Short URL</th>
-                <th scope="col">Clicks</th>
+				<th scope="col">Clicks</th>
 				<th scope="col">Active</th>
 				<th scope="col">Alias</th>
 				<th scope="col">Delete?</th>
@@ -105,7 +102,7 @@
 								doc.alias}</a
 						></td
 					>
-                    <td>{doc.clicks}</td>
+					<td>{doc.clicks}</td>
 					<td
 						><input
 							type="checkbox"
@@ -140,16 +137,18 @@
 	</table>
 </div>
 <div>
-    <h2>QR Codes for the links</h2>
-    {#each docs as doc}
-	<div>
-        <h3>{doc.alias}</h3>
-		<img
-			src={`https://api.qrserver.com/v1/create-qr-code/?data=${window.location.href.split('/d')[0] + 'n/' + doc.alias}&color=3949ab`}
-			alt="QR Code"
-			style="width: 200px; height: 100%;"
-		/>
-	</div>
-    <br />
-    {/each}
+	<h2>QR Codes for the links</h2>
+	{#each docs as doc}
+		<div>
+			<h3>{doc.alias}</h3>
+			<img
+				src={`https://api.qrserver.com/v1/create-qr-code/?data=${
+					window.location.href.split('/d')[0] + 'n/' + doc.alias
+				}&color=3949ab`}
+				alt="QR Code"
+				style="width: 200px; height: 100%;"
+			/>
+		</div>
+		<br />
+	{/each}
 </div>

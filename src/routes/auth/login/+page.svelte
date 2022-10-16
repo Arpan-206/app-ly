@@ -6,7 +6,7 @@
 		const email = formData.get('email');
 		const password = formData.get('password');
 
-		const data = await account.createEmailSession(email, password).catch((err) => {
+		await account.createEmailSession(email, password).catch(() => {
 			alert('An error occured');
 			return;
 		});

@@ -10,10 +10,10 @@
 			alert('Passwords do not match');
 			return;
 		}
-		const data = await account.create('unique()', email, password).catch((err) => {
-            alert('An error occured');
-            return;
-        });
+		await account.create('unique()', email, password).catch(() => {
+			alert('An error occured');
+			return;
+		});
 
 		window.location.href = '/';
 	}

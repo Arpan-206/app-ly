@@ -15,7 +15,7 @@
 		let meh = await account.get().catch();
 
 		if (!meh) {
-			const anonUser = await account.createAnonymousSession();
+			await account.createAnonymousSession();
 			meh = await account.get().catch();
 		}
 		if (meh.email === '') {
@@ -28,7 +28,7 @@
 				.createDocument(PUBLIC_AW_DB, PUBLIC_AW_ANON_COLLECTION, ID.unique(), {
 					long_url: long_url
 				})
-				.catch((err) => {
+				.catch(() => {
 					alert('An error occured');
 				});
 			short_url = window.location.href + 'n/' + data.$id;
@@ -37,7 +37,7 @@
 			let mStr = Math.random().toString(36).substring(2, 7);
 			let checkAlias = await db
 				.listDocuments(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, [Query.equal('alias', [mStr])])
-				.catch((err) => {});
+				.catch(() => {});
 			if (checkAlias.total > 0) {
 				mStr = Math.random().toString(36).substring(2, 7);
 			}
@@ -47,7 +47,7 @@
 					userID: meh.$id,
 					alias: mStr
 				})
-				.catch((err) => {
+				.catch(() => {
 					alert('An error occured');
 				});
 			short_url = window.location.href + 'l/' + data.alias;
@@ -65,6 +65,7 @@
 	App-ly is an open-source URL shortener made using Svelte and Appwrite. It is a web app that allows
 	you to shorten long URLs, share them, and generate QR Codes for them.
 </p>
+<img src="/App-ly.png" alt="App-ly" />
 <div>
 	<form on:submit|preventDefault={shorten}>
 		<label for="long_url">
