@@ -81,6 +81,7 @@
 			<tr>
 				<th scope="col">Long URL</th>
 				<th scope="col">Short URL</th>
+                <th scope="col">Clicks</th>
 				<th scope="col">Active</th>
 				<th scope="col">Alias</th>
 				<th scope="col">Delete?</th>
@@ -104,6 +105,7 @@
 								doc.alias}</a
 						></td
 					>
+                    <td>{doc.clicks}</td>
 					<td
 						><input
 							type="checkbox"

@@ -20,6 +20,9 @@
 			if (data.documents[i].alias === alias) {
 				let datad = data.documents[i];
 				if (datad.active) {
+                    await db.updateDocument(PUBLIC_AW_DB, PUBLIC_AW_LOGIN_COLLECTION, datad.$id, {
+                        clicks: datad.clicks + 1
+                    });
 					window.location.href = data.documents[i].long_url;
 				}
                 else
