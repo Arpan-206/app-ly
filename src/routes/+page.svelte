@@ -61,7 +61,10 @@
 </script>
 
 <h1>App-ly</h1>
-<p>App-ly is a basic app to create short links.</p>
+<p>
+	App-ly is an open-source URL shortener made using Svelte and Appwrite. It is a web app that allows
+	you to shorten long URLs, share them, and generate QR Codes for them.
+</p>
 <div>
 	<form on:submit|preventDefault={shorten}>
 		<label for="long_url">
@@ -87,7 +90,7 @@
 			<div class="qr-code">
 				<img
 					src={`https://api.qrserver.com/v1/create-qr-code/?data=${short_url}&color=3949ab`}
-                    alt="QR Code"
+					alt="QR Code"
 					style="width: 50%; height: 50%;"
 				/>
 			</div>

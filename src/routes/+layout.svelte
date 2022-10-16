@@ -37,7 +37,7 @@
 						>{email}</summary
 					>
 					<ul role="listbox">
-						<li><button on:click={logout}>Log out</button></li>
+						<li><button on:click={logout} class="outline secondary">Log out</button></li>
 					</ul>
 				</details>
 			</li>{/if}
@@ -50,4 +50,7 @@
 		</ul>
 	</nav>
 	<slot />
+    <footer style="position: fixed; bottom: 0; ">
+        <p>Made with ❤️ by <a href="https://github.com/Arpan-206">Arpan Pandey</a> with <a href="https://appwrite.io">Appwrite</a>, <a href="https://svelte.dev">Svelte</a> and <a href="https://picocss.com">PicoCSS</a>.</p>
+    </footer>
 </main>
